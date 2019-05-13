@@ -68,7 +68,9 @@ class AverageLearner1D(Learner1D):
             # at least 2 points and the amount of points added are
             # at least half of the number of points already in 'data'.
             # These "magic numbers" are somewhat arbitrary.
-            super().tell_many(xs, ys)
+            for x, dp in zip(xs, ys):
+                for seed, y in dp.items():
+                    self.tell((x, seed), y)
             return
 
         # Add data points
@@ -170,4 +172,4 @@ class AverageLearner1D(Learner1D):
     def _set_data(self, data):
         # change dict -> DataPoint, because the points are saved using dicts
         data = {k: DataPoint(v) for k, v in data.items()}
-        self.tell_many(data.keys(), data.values())
+        self.tell_many(data.keys(), data.values(), force=True)
