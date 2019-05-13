@@ -172,4 +172,4 @@ class AverageLearner1D(Learner1D):
     def _set_data(self, data):
         # change dict -> DataPoint, because the points are saved using dicts
         data = {k: DataPoint(v) for k, v in data.items()}
-        self.tell_many(data.keys(), data.values(), force=True)
+        self.tell_many(data.keys(), data.values())
