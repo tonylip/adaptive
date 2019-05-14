@@ -149,7 +149,7 @@ class AverageLearner1D(Learner1D):
         hv = ensure_holoviews()
 
         if not self._data:
-            return hv.Scatter([])
+            return hv.Overlay([hv.Scatter([])])
 
         xs, ys = zip(*sorted(self.data.items()))
         get = lambda attr: [getattr(self._data[x], attr) for x in xs]  # noqa: E731
