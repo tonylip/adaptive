@@ -148,22 +148,15 @@ class AverageLearner1D(Learner1D):
     def plot(self, *, with_sem=True):
         hv = ensure_holoviews()
 
-        if not self._data:
-            return hv.Overlay([hv.Scatter([])])
-
-        xs, ys = zip(*sorted(self.data.items()))
-        get = lambda attr: [getattr(self._data[x], attr) for x in xs]  # noqa: E731
-        sems = get("standard_error")
-        stds = get("std")
-        Ns = get("n")
-
-        scatter = hv.Scatter(
-            (xs, ys, stds, sems, Ns), vdims=["mean", "std", "standard_error", "n"]
-        )
+        xs = sorted(self._data.keys())
+        vdims = ["mean", "standard_error", "std", "n"]
+        values = [[getattr(self._data[x], attr) for x in xs] for attr in vdims]
+        scatter = hv.Scatter((xs, *values), vdims=vdims)
 
         if not with_sem:
             plot = scatter.opts(plot=dict(tools=["hover"]))
         else:
+            ys, sems, *_ = values
             err = [x if x < sys.float_info.max else np.nan for x in sems]
             spread = hv.Spread((xs, ys, err))
             plot = scatter * spread
