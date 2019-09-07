@@ -30,3 +30,4 @@ with suppress(ImportError):
     from adaptive.learner.skopt_learner import SKOptLearner  # noqa: F401
 
     __all__.append("SKOptLearner")
+1
